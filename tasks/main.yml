@@ -25,6 +25,9 @@
 - include: setup-Debian.yml
   when: ansible_os_family == 'Debian'
 
+- include: setup-OpenBSD.yml
+  when: ansible_os_family == 'OpenBSD'
+
 # Configure Jenkins init settings.
 - include: settings.yml
 
