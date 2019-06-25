@@ -9,6 +9,7 @@
   with_items:
       "{{ jenkins_init_changes }}"
   register: jenkins_init_prefix
+  notify: restart jenkins
 
 - name: Set the Jenkins home directory
   lineinfile:
@@ -16,10 +17,7 @@
     regexp: '^JENKINS_HOME=.*'
     line: 'JENKINS_HOME={{ jenkins_home }}'
   register: jenkins_home_config
-
-- name: Immediately restart Jenkins on init config changes.
-  service: name=jenkins state=restarted
-  when: jenkins_init_prefix.changed
+  notify: restart jenkins
 
 - name: Set HTTP port in Jenkins config.
   lineinfile:
@@ -28,6 +26,7 @@
     regexp: '^{{ jenkins_http_port_param }}='
     line: '{{ jenkins_http_port_param }}={{ jenkins_http_port }}'
   register: jenkins_http_config
+  notify: restart jenkins
 
 - name: Ensure jenkins_home {{ jenkins_home }} exists
   file:
